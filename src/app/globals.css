@@ -1,26 +1,265 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* dark মোড: <html class="dark"> থাকলে চালু */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* ───────── ব্র্যান্ড রং ─────────
+   আগের indigo-* ক্লাসগুলো এখন লোগোর টিল-নীল। 600 ও 700 ইচ্ছা করে একটু গাঢ়,
+   যেন সাদা লেখার বোতামে পড়তে সুবিধা হয় */
+@theme {
+  --color-indigo-50: #ecfeff;
+  --color-indigo-100: #cffafe;
+  --color-indigo-200: #a5f3fc;
+  --color-indigo-300: #67e8f9;
+  --color-indigo-400: #22d3ee;
+  --color-indigo-500: #0891b2;
+  --color-indigo-600: #0e7490;
+  --color-indigo-700: #155e75;
+  --color-indigo-800: #164e63;
+  --color-indigo-900: #083344;
+  --color-indigo-950: #042530;
 }
 
+/* shadcn token → Tailwind রঙের নাম */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ───────── Light ───────── */
+:root {
+  --radius: 0.75rem;
+
+  --background: #f6f8fb;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+  --primary: #0e7490;
+  --primary-foreground: #ffffff;
+  --secondary: #f1f5f9;
+  --secondary-foreground: #0f172a;
+  --muted: #f1f5f9;
+  --muted-foreground: #64748b;
+  --accent: #ecfeff;
+  --accent-foreground: #155e75;
+  --destructive: #dc2626;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #22d3ee;
+
+  /* dark মোডে হালকা-ছায়া রং বানানোর জন্য মূল রং */
+  --h-indigo: #0891b2;
+  --h-violet: #8b5cf6;
+  --h-amber: #f59e0b;
+  --h-emerald: #10b981;
+  --h-red: #ef4444;
+  --h-sky: #0ea5e9;
+  --h-blue: #3b82f6;
+  --h-rose: #f43f5e;
+}
+
+/* ───────── Dark ───────── */
+.dark {
+  color-scheme: dark;
+
+  --background: #0a0f1e;
+  --foreground: #f1f5f9;
+  --card: #131b2e;
+  --card-foreground: #f1f5f9;
+  --popover: #131b2e;
+  --popover-foreground: #f1f5f9;
+  --primary: #0891b2;
+  --primary-foreground: #ffffff;
+  --secondary: #172033;
+  --secondary-foreground: #f1f5f9;
+  --muted: #172033;
+  --muted-foreground: #9aa8c0;
+  --accent: #172033;
+  --accent-foreground: #e2e8f2;
+  --destructive: #ef4444;
+  --border: #243049;
+  --input: #243049;
+  --ring: #22d3ee;
+
+  /* কার্ডের পটভূমি ও ধূসর স্কেল উল্টে দেওয়া */
+  --color-white: #131b2e;
+  --color-slate-50: #0a0f1e;
+  --color-slate-100: #172033;
+  --color-slate-200: #243049;
+  --color-slate-300: #34425e;
+  --color-slate-400: #7c8aa5;
+  --color-slate-500: #9aa8c0;
+  --color-slate-600: #b3bfd3;
+  --color-slate-700: #cbd5e4;
+  --color-slate-800: #e2e8f2;
+  --color-slate-900: #f1f5f9;
+  --color-slate-950: #f8fafc;
+
+  /* রঙিন হালকা ব্যাকগ্রাউন্ড (50–300) গাঢ় ছায়ায় */
+  --color-indigo-50: color-mix(in oklab, var(--h-indigo) 10%, #0f1626);
+  --color-indigo-100: color-mix(in oklab, var(--h-indigo) 18%, #0f1626);
+  --color-indigo-200: color-mix(in oklab, var(--h-indigo) 30%, #0f1626);
+  --color-indigo-300: color-mix(in oklab, var(--h-indigo) 45%, #0f1626);
+
+  --color-violet-50: color-mix(in oklab, var(--h-violet) 10%, #0f1626);
+  --color-violet-100: color-mix(in oklab, var(--h-violet) 18%, #0f1626);
+  --color-violet-200: color-mix(in oklab, var(--h-violet) 30%, #0f1626);
+  --color-violet-300: color-mix(in oklab, var(--h-violet) 45%, #0f1626);
+
+  --color-amber-50: color-mix(in oklab, var(--h-amber) 10%, #0f1626);
+  --color-amber-100: color-mix(in oklab, var(--h-amber) 18%, #0f1626);
+  --color-amber-200: color-mix(in oklab, var(--h-amber) 30%, #0f1626);
+  --color-amber-300: color-mix(in oklab, var(--h-amber) 45%, #0f1626);
+
+  --color-emerald-50: color-mix(in oklab, var(--h-emerald) 10%, #0f1626);
+  --color-emerald-100: color-mix(in oklab, var(--h-emerald) 18%, #0f1626);
+  --color-emerald-200: color-mix(in oklab, var(--h-emerald) 30%, #0f1626);
+  --color-emerald-300: color-mix(in oklab, var(--h-emerald) 45%, #0f1626);
+
+  --color-red-50: color-mix(in oklab, var(--h-red) 10%, #0f1626);
+  --color-red-100: color-mix(in oklab, var(--h-red) 18%, #0f1626);
+  --color-red-200: color-mix(in oklab, var(--h-red) 30%, #0f1626);
+  --color-red-300: color-mix(in oklab, var(--h-red) 45%, #0f1626);
+
+  --color-sky-50: color-mix(in oklab, var(--h-sky) 10%, #0f1626);
+  --color-sky-100: color-mix(in oklab, var(--h-sky) 18%, #0f1626);
+  --color-sky-200: color-mix(in oklab, var(--h-sky) 30%, #0f1626);
+  --color-sky-300: color-mix(in oklab, var(--h-sky) 45%, #0f1626);
+
+  --color-blue-50: color-mix(in oklab, var(--h-blue) 10%, #0f1626);
+  --color-blue-100: color-mix(in oklab, var(--h-blue) 18%, #0f1626);
+  --color-blue-200: color-mix(in oklab, var(--h-blue) 30%, #0f1626);
+  --color-blue-300: color-mix(in oklab, var(--h-blue) 45%, #0f1626);
+
+  --color-rose-50: color-mix(in oklab, var(--h-rose) 10%, #0f1626);
+  --color-rose-100: color-mix(in oklab, var(--h-rose) 18%, #0f1626);
+  --color-rose-200: color-mix(in oklab, var(--h-rose) 30%, #0f1626);
+  --color-rose-300: color-mix(in oklab, var(--h-rose) 45%, #0f1626);
+}
+
+/* dark মোডে রঙিন লেখা হালকা করা (গাঢ় ব্যাকগ্রাউন্ডে পড়ার জন্য) */
+.dark .text-indigo-600,
+.dark .text-indigo-700,
+.dark .hover\:text-indigo-600:hover { color: #67e8f9; }
+.dark .text-indigo-100 { color: #cffafe; }
+.dark .text-indigo-200 { color: #a5f3fc; }
+.dark .text-amber-600,
+.dark .text-amber-700,
+.dark .text-amber-800,
+.dark .text-amber-900 { color: #fbbf24; }
+.dark .text-emerald-600,
+.dark .text-emerald-700,
+.dark .text-emerald-800,
+.dark .text-emerald-900 { color: #34d399; }
+.dark .text-red-600,
+.dark .text-red-700 { color: #f87171; }
+.dark .text-sky-700,
+.dark .text-sky-800 { color: #7dd3fc; }
+.dark .text-violet-600,
+.dark .text-violet-700,
+.dark .text-violet-800 { color: #c4b5fd; }
+.dark .text-blue-700 { color: #93c5fd; }
+.dark .text-rose-600,
+.dark .text-rose-700 { color: #fda4af; }
+
+/* রঙিন বোতামের সাদা লেখা সাদাই থাকবে */
+.dark .text-white { color: #ffffff; }
+.dark .bg-slate-900 { background-color: #334155; }
+.dark .hover\:bg-slate-700:hover { background-color: #475569; }
+
+/* ───────── বেস ───────── */
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+
+    html {
+    scroll-behavior: smooth;
+  }
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-inter), var(--font-bn), ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background-color: color-mix(in oklab, var(--color-indigo-500) 30%, transparent);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+/* ───────── Walkthrough অ্যানিমেশন ───────── */
+@keyframes tour-pop {
+  from { opacity: 0; transform: scale(0.85) translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes tour-up {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes tour-out {
+  to { opacity: 0; transform: translateY(-8px); }
+}
+@keyframes tour-type {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+@keyframes tour-press {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(0.94); filter: brightness(0.9); }
+}
+@keyframes tour-bar {
+  from { width: 0; }
+  to { width: 100%; }
+}
+@keyframes tour-select {
+  from { box-shadow: 0 0 0 0 transparent; }
+  to {
+    box-shadow: 0 0 0 2px var(--h-indigo);
+    background-color: color-mix(in oklab, var(--h-indigo) 14%, transparent);
+    color: var(--h-indigo);
+  }
+}
+
+.tour-pop { opacity: 0; animation: tour-pop 0.45s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards; }
+.tour-up { opacity: 0; animation: tour-up 0.5s ease-out forwards; }
+.tour-out { animation: tour-out 0.3s ease forwards; }
+.tour-type {
+  display: inline-block;
+  clip-path: inset(0 100% 0 0);
+  animation: tour-type var(--d, 1s) steps(var(--n, 12)) forwards;
+}
+.tour-press { animation: tour-press 0.35s ease-in-out; }
+.tour-bar { width: 0; animation-name: tour-bar; animation-timing-function: linear; animation-fill-mode: forwards; }
+.tour-select { animation: tour-select 0.4s ease forwards; }
+
+@media (prefers-reduced-motion: reduce) {
+  .tour-pop, .tour-up, .tour-type, .tour-select {
+    animation-duration: 0.01s !important;
+    animation-delay: 0s !important;
+  }
 }
