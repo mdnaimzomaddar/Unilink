@@ -18,6 +18,7 @@ import {
 import { getSession } from "@/lib/session";
 import { getUniversityNames, isVerifiedMember, listActiveUniversities } from "@/lib/university";
 import { getMyLatestStudentVerification } from "@/lib/student-verification";
+import { SITE } from "@/lib/site";
 
 type SP = Promise<{ method?: string }>;
 
@@ -55,6 +56,13 @@ async function VerifyContent({ searchParams }: { searchParams: SP }) {
     getMyLatestStudentVerification(user.id),
   ]);
 
+  const pickerUnis = unis.map((u) => ({
+    slug: u.slug,
+    name: u.name,
+    shortName: u.shortName,
+    type: u.type,
+  }));
+
   const tab = (active: boolean) =>
     `flex items-start gap-3 rounded-2xl border p-4 transition ${
       active
@@ -65,7 +73,7 @@ async function VerifyContent({ searchParams }: { searchParams: SP }) {
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
       <div className="min-w-0 space-y-6">
-        {/* পদ্ধতি বেছে নেওয়া */}
+        {/* পদ্ধতি বেছে নেওয়া (শুধু বাটন, ভেতরে কোনো ফর্ম নেই) */}
         <div className="grid gap-3 sm:grid-cols-2">
           <Link href="/verify-university" className={tab(!card)}>
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600">
@@ -88,7 +96,7 @@ async function VerifyContent({ searchParams }: { searchParams: SP }) {
         </div>
 
         {!card ? (
-          <VerifyForm universities={unis.map((u) => u.name)} />
+          <VerifyForm universities={unis.filter((u) => u.domains.length > 0).map((u) => u.name)} />
         ) : latest?.status === "pending" ? (
           <div className="space-y-3 rounded-2xl border bg-white p-8 text-center shadow-sm">
             <span className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-50 text-amber-600">
@@ -113,7 +121,7 @@ async function VerifyContent({ searchParams }: { searchParams: SP }) {
                 </span>
               </div>
             )}
-            <StudentCardForm universities={unis.map((u) => ({ slug: u.slug, name: u.name }))} />
+            <StudentCardForm universities={pickerUnis} supportEmail={SITE.supportEmail} />
           </>
         )}
       </div>

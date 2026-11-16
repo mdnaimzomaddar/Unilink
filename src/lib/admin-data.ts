@@ -14,6 +14,8 @@ export type AdminUniversityDTO = {
   domains: string[];
   active: boolean;
   members: number;
+  shortName: string;
+  type: string;
 };
 
 export async function getAdminUniversities(): Promise<AdminUniversityDTO[]> {
@@ -36,6 +38,8 @@ export async function getAdminUniversities(): Promise<AdminUniversityDTO[]> {
     domains: u.domains as string[],
     active: !!u.active,
     members: map.get(u.slug) ?? 0,
+    shortName: (u.shortName as string) ?? "",
+    type: (u.type as string) ?? "other",
   }));
 }
 

@@ -5,6 +5,8 @@ import University from "@/models/University";
 export type UniversityDTO = {
   id: string;
   name: string;
+  shortName: string;
+  type: string;
   slug: string;
   domains: string[];
   active: boolean;
@@ -62,5 +64,7 @@ export async function listActiveUniversities(): Promise<UniversityDTO[]> {
     slug: r.slug,
     domains: r.domains as string[],
     active: !!r.active,
+    shortName: (r.shortName as string) ?? "",
+    type: (r.type as string) ?? "other",
   }));
 }

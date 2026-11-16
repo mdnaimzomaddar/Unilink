@@ -2,10 +2,11 @@ import nodemailer from "nodemailer";
 
 type Mail = { to: string; subject: string; text: string; html?: string };
 type MailResult = { ok: true } | { ok: false; error: string };
+type Transporter = ReturnType<typeof nodemailer.createTransport>;
 
-let transporter: nodemailer.Transporter | null = null;
+let transporter: Transporter | null = null;
 
-function getTransporter() {
+function getTransporter(): Transporter | null {
   if (transporter) return transporter;
   const { SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS } = process.env;
   if (!SMTP_HOST || !SMTP_USER || !SMTP_PASS) return null;

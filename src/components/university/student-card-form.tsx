@@ -7,8 +7,7 @@ import { toast } from "react-toastify";
 import { startStudentVerification } from "@/app/actions/student-verification";
 import { Button } from "@/components/ui/button";
 import { IconCamera, IconCheck, IconLock } from "@/components/icons";
-
-type Uni = { slug: string; name: string };
+import UniversityPicker, { type PickerUni } from "@/components/university/university-picker";
 
 const inputClass =
   "w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200";
@@ -29,9 +28,15 @@ async function compressImage(file: File, maxSide = 1400, quality = 0.78): Promis
   );
 }
 
-export default function StudentCardForm({ universities }: { universities: Uni[] }) {
+export default function StudentCardForm({
+  universities,
+  supportEmail,
+}: {
+  universities: PickerUni[];
+  supportEmail: string;
+}) {
   const router = useRouter();
-  const [uni, setUni] = useState(universities[0]?.slug ?? "");
+  const [uni, setUni] = useState("");
   const [department, setDepartment] = useState("");
   const [studentId, setStudentId] = useState("");
   const [draft, setDraft] = useState<{ id: string; code: string } | null>(null);
@@ -56,6 +61,10 @@ export default function StudentCardForm({ universities }: { universities: Uni[] 
 
   async function start(e: React.FormEvent) {
     e.preventDefault();
+    if (!uni) {
+      toast.error("University বেছে নাও");
+      return;
+    }
     setBusy(true);
     const res = await startStudentVerification({ university: uni, department, studentId });
     setBusy(false);
@@ -129,34 +138,45 @@ export default function StudentCardForm({ universities }: { universities: Uni[] 
         <form onSubmit={start} className="space-y-4">
           <div className="space-y-1.5">
             <label className="text-sm font-medium">University</label>
-            <select className={inputClass} value={uni} onChange={(e) => setUni(e.target.value)}>
-              {universities.map((u) => (
-                <option key={u.slug} value={u.slug}>
-                  {u.name}
-                </option>
-              ))}
-            </select>
+            <UniversityPicker
+              universities={universities}
+              value={uni}
+              onChange={setUni}
+              supportEmail={supportEmail}
+            />
           </div>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-1.5">
               <label className="text-sm font-medium">বিভাগ</label>
-              <input className={inputClass} required value={department}
-                onChange={(e) => setDepartment(e.target.value)} placeholder="যেমন: CSE" />
+              <input
+                className={inputClass}
+                required
+                value={department}
+                onChange={(e) => setDepartment(e.target.value)}
+                placeholder="যেমন: CSE"
+              />
             </div>
             <div className="space-y-1.5">
               <label className="text-sm font-medium">Student ID</label>
-              <input className={inputClass} required value={studentId}
-                onChange={(e) => setStudentId(e.target.value)} placeholder="Card-এ যেভাবে লেখা" />
+              <input
+                className={inputClass}
+                required
+                value={studentId}
+                onChange={(e) => setStudentId(e.target.value)}
+                placeholder="Card-এ যেভাবে লেখা"
+              />
             </div>
           </div>
           <p className="flex items-start gap-2 text-xs text-slate-500">
             <IconLock className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-            Card-এর ছবি শুধু যাচাইয়ের জন্য, শুধু admin দেখেন, আর সিদ্ধান্তের পরেই মুছে যায়।{" "}
-            <Link href="/privacy" className="underline">
-              গোপনীয়তা নীতি
-            </Link>
+            <span>
+              Card-এর ছবি শুধু যাচাইয়ের জন্য, শুধু admin দেখেন, আর সিদ্ধান্তের পরেই মুছে যায়।{" "}
+              <Link href="/privacy" className="underline">
+                গোপনীয়তা নীতি
+              </Link>
+            </span>
           </p>
-          <Button type="submit" className="w-full" disabled={busy}>
+          <Button type="submit" className="w-full" disabled={busy || !uni}>
             {busy ? "অপেক্ষা করো..." : "পরের ধাপ: ছবি তোলো"}
           </Button>
         </form>

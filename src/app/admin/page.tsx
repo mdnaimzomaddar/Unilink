@@ -22,7 +22,7 @@ import {
   ReportActions,
   RevokeButton,
 } from "@/components/admin/admin-actions";
-import { AddUniversityForm, UniversityRowActions } from "@/components/admin/university-admin";
+import { AddUniversityForm, SeedUniversitiesButton, UniversityRowActions } from "@/components/admin/university-admin";
 import {
   IconCoins,
   IconFlag,
@@ -266,6 +266,7 @@ async function Universities() {
   const list = await getAdminUniversities();
   return (
     <div className="space-y-6">
+      <SeedUniversitiesButton />
       <AddUniversityForm />
       <section className="space-y-3">
         <h2 className="text-lg font-semibold">University তালিকা ({list.length})</h2>
@@ -276,8 +277,15 @@ async function Universities() {
             <div key={u.id} className={card}>
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <p className="font-semibold">
-                  {u.name} <span className="text-xs font-normal text-slate-500">({u.slug})</span>
+                  {u.name}{" "}
+                  <span className="text-xs font-normal text-slate-500">
+                    {u.shortName ? `${u.shortName} · ` : ""}
+                    {u.type === "public" ? "সরকারি" : u.type === "private" ? "বেসরকারি" : "অন্যান্য"} · {u.slug}
+                  </span>
                 </p>
+                <p className="break-all text-sm text-slate-600">
+                {u.domains.length > 0 ? `Domain: ${u.domains.join(", ")}` : "Domain নেই (শুধু Student ID পদ্ধতি)"}
+              </p>
                 <span
                   className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${
                     u.active ? "bg-emerald-100 text-emerald-800" : "bg-slate-100 text-slate-600"
